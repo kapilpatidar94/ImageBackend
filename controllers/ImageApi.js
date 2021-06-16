@@ -12,10 +12,10 @@ module.exports = {
             }
             const fileUrl = req.body.image;
             const uploadResponse = await cloudinary.v2.uploader.upload(fileUrl , {
-                upload_preset: 'ml_default',
+                upload_preset: 'dftesmumf',
             });
             const url = uploadResponse.secure_url;
-
+console.log(url)
             const insert = new Img();
             insert.name= req.body.name
             insert.Image = url
@@ -45,7 +45,7 @@ module.exports = {
         try {
             const fileUrl = req.body.image;
             const uploadResponse = await cloudinary.v2.uploader.upload(fileUrl, {
-                upload_preset: 'ml_default',
+                upload_preset: 'dftesmumf',
             });
             const url = uploadResponse.secure_url;
 
