@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Img = mongoose.model('Img');
 const cloudinary = require('cloudinary');
-require('../middleware/cloudinary');
+require('../middlewares/cloudinary');
 
 
 module.exports = {
@@ -15,7 +15,6 @@ module.exports = {
                 upload_preset: 'dftesmumf',
             });
             const url = uploadResponse.secure_url;
-console.log(url)
             const insert = new Img();
             insert.name= req.body.name
             insert.Image = url
@@ -42,23 +41,24 @@ console.log(url)
         }
     },
     update: async (req, res) => {
-        try {
-            const fileUrl = req.body.image;
-            const uploadResponse = await cloudinary.v2.uploader.upload(fileUrl, {
-                upload_preset: 'dftesmumf',
-            });
-            const url = uploadResponse.secure_url;
-
-            const update = await Img.findOneAndUpdate({name:req.body.name})
-            update.Image = url
-
-            await update.save((err,done)=>{
-                if(err) return console.log(err);
-                res.json({message:"done",url})
-            });
-            
-        } catch (err) {
-            res.json(err)
-        }
+      try {
+      
+        await Img.findOneAndDelete({name:req.body.name})
+        const fileUrl = req.body.image;
+        const uploadResponse = await cloudinary.v2.uploader.upload(fileUrl , {
+            upload_preset: 'dftesmumf',
+        });
+        const url = uploadResponse.secure_url;
+        const insert = new Img();
+        insert.name= req.body.name
+        insert.Image = url
+        await insert.save((err,done)=>{
+            if(err) return console.log(err);
+            res.json({message:"done",url})
+        });
+    } catch (err) {
+        res.send(err)
+        console.log(err);
+    }
     }
 }
